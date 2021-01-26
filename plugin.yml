@@ -3,16 +3,5 @@ main: GetPos\GetPos
 author: IceCruelStuff
 description: Lifeboat Network Coordinates plugin remake for PocketMine-MP
 version: 1.5.1
-api: 3.0.0, 4.0.0
-
+api: 3.15.0
 load: POSTWORLD
-commands:
- getpos:
-  description: Gives your current coordinates
-  usage: "/getpos"
-  permission: pos.command.pos
-  
-permissions:
- pos.command.pos:
-  description: Gives your current coordinates
-  default: true
