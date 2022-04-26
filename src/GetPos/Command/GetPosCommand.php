@@ -4,13 +4,13 @@ namespace GetPos\Command;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use pocketmine\command\PluginIdentifiableCommand;
+use pocketmine\plugin\PluginOwned;
 use pocketmine\plugin\Plugin;
 use pocketmine\utils\TextFormat;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use GetPos\GetPos;
 
-class GetPosCommand extends Command implements PluginIdentifiableCommand {
+class GetPosCommand extends Command implements PluginOwned {
 
     private $plugin;
 
@@ -24,11 +24,16 @@ class GetPosCommand extends Command implements PluginIdentifiableCommand {
         $this->setPermission("getpos.command");
     }
 
-    public function getPlugin() : Plugin {
+    public function getOwningPlugin() : Plugin {
         return $this->plugin;
     }
 
-    public function execute(CommandSender $sender, string $label, array $args) {
+    public function sendFormattedMessage($x, $y, $z, $player, $name, $levelName) {
+        $player->sendMessage(TextFormat::GREEN . $name . "'s coordinates");
+        $sender->sendMessage(TextFormat::YELLOW . "X:" . TextFormat::AQUA . $x . TextFormat::YELLOW . " Y:" . TextFormat::AQUA . $y . TextFormat::YELLOW . " Z:" . TextFormat::AQUA . $z . TextFormat::YELLOW . " Level:" . TextFormat::AQUA . $levelName);
+    }
+
+    public function execute(CommandSender $sender, string $label, array $args) : void {
         if (!$this->testPermission($sender)) {
             return;
         }
@@ -40,11 +45,7 @@ class GetPosCommand extends Command implements PluginIdentifiableCommand {
                 $y = round($player->getY(), 1);
                 $z = round($player->getZ(), 1);
                 $level = $player->getLevel()->getName();
-                $sender->sendMessage(TextFormat::GREEN . $player->getName() . "'s coordinates");
-                $sender->sendMessage(TextFormat::YELLOW . "X:" . TextFormat::AQUA . $x .
-                                     TextFormat::YELLOW . " Y:" . TextFormat::AQUA . $y .
-                                     TextFormat::YELLOW . " Z:" . TextFormat::AQUA . $z .
-                                     TextFormat::YELLOW . " Level:" . TextFormat::AQUA . $level);
+                $this->sendFormattedMessage($x, $y, $z, $sender, $player->getName(), $level);
             }
         } else {
             if ($sender instanceof Player) {
@@ -52,10 +53,7 @@ class GetPosCommand extends Command implements PluginIdentifiableCommand {
                 $y = round($sender->getY(), 1);
                 $z = round($sender->getZ(), 1);
                 $level = $sender->getLevel()->getName();
-                $sender->sendMessage(TextFormat::YELLOW . "X:" . TextFormat::AQUA . $x .
-                                     TextFormat::YELLOW . " Y:" . TextFormat::AQUA . $y .
-                                     TextFormat::YELLOW . " Z:" . TextFormat::AQUA . $z .
-                                     TextFormat::YELLOW . " Level:" . TextFormat::AQUA . $level);
+                $this->sendFormattedMessage($x, $y, $z, $sender, $sender->getName(), $level);
             } else {
                 $sender->sendMessage(TextFormat::RED . "Please enter a player name");
             }

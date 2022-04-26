@@ -1,7 +1,5 @@
 name: GetPos
 main: GetPos\GetPos
-author: IceCruelStuff
-description: Lifeboat Network Coordinates plugin remake for PocketMine-MP
+description: Coordinates plugin for PocketMine-MP
 version: 1.5.1
-api: 3.15.0
-load: POSTWORLD
+api: 4.0.0
